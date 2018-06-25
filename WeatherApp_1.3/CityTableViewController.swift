@@ -6,7 +6,7 @@
 //  Copyright © 2018 Alejandro Gonzalez. All rights reserved.
 //
 
-var json = """
+/*var json = """
     {
     "timezone": "America/New_York",
     "currently": {
@@ -17,7 +17,7 @@ var json = """
         "humidity": 100.00,
         },
     }
-    """
+    """*/
 
 
 import UIKit
@@ -38,9 +38,7 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
         super.viewDidLoad()
         
         self.getLatestWeather(withLocation: "42.3601,-71.0589") { (results:[Weather]) in
-            for result in results {
-                print(result)
-            }
+            
         }
         
         searchbar.delegate = self
@@ -86,13 +84,13 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
    
     // MARK: Helper functions
     
-    func getLatestWeather(withLocation name:String , completion: @escaping ([Weather]) ->()) {
+    func getLatestWeather(withLocation name:CLLocationCoordinate2D , completion: @escaping ([Weather]) ->()) {
         guard URL(string: basePathURL) != nil else {
             return
         }
         
         //let url = basePathURL + "\(name.latitude), \(name.longitude)"
-        let url = basePathURL + name
+        let url = basePathURL + "\(name.latitude), \(name.longitude)"
         let request = URLRequest(url:URL(string:url)!)
         let task = URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) -> Void in
             
@@ -121,12 +119,12 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
         
         var weatherArray = [Weather]()
         
-        let jsonData = json.data(using: .utf8)
+       // let jsonData = json.data(using: .utf8)
         
         let decoder = JSONDecoder()
         
         do {
-            let weatherData = try decoder.decode(Weather.self, from: jsonData! )
+            let weatherData = try decoder.decode(Weather.self, from: data )
             weatherArray.append(weatherData)
             print(weatherData)
         } catch {
@@ -143,19 +141,19 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
         }
     }
     
-//    func updateWeatherForLocation (location:String) {
-//        CLGeocoder().geocodeAddressString(location) { (placemarks:[CLPlacemark]?, error:Error?) in
-//            if error == nil {
-//                if let location = placemarks?.first?.location{
-//                    self.getLatestWeather(withLocation: location.coordinate, completion: { (results:[Weather]?) in
-//                        if let weatherData = results {
-//                            self.currentWeatherData = weatherData
-//
-//                        }
-//                    })
-//                }
-//            }
-//        }
-//    }
+    func updateWeatherForLocation (location:String) {
+        CLGeocoder().geocodeAddressString(location) { (placemarks:[CLPlacemark]?, error:Error?) in
+            if error == nil {
+                if let location = placemarks?.first?.location{
+                    self.getLatestWeather(withLocation: location.coordinate, completion: { (results:[Weather]?) in
+                        if let weatherData = results {
+                            self.currentWeatherData = weatherData
+
+                        }
+                    })
+                }
+            }
+        }
+    }
 
 }
