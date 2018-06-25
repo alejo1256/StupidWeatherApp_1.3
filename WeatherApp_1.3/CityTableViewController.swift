@@ -7,19 +7,19 @@
 //
 
 let json = """
-{
-timezone: "America/New_York",
-- currently: {
+    {
+    timezone: "America/New_York",
+    - currently: {
 
-time: 1529626827,
-summary: "Clear"
-temperature: "75.6"
-humidity: "100.00"
+    time: 1529626827,
+    summary: "Clear"
+    temperature: "75.6"
+    humidity: "100.00"
 
 
 
-},
-"""
+    },
+    """
 
 
 import UIKit
