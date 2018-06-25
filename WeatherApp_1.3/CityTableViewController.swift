@@ -126,8 +126,8 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
         let decoder = JSONDecoder()
         
         do {
-            let weatherData = try decoder.decode([Weather].self, from: jsonData! )
-           // weatherArray.append(weatherData)
+            let weatherData = try decoder.decode(Weather.self, from: jsonData! )
+            weatherArray.append(weatherData)
             print(weatherData)
         } catch {
             print(error)
