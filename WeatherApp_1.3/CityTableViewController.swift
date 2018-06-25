@@ -6,19 +6,17 @@
 //  Copyright © 2018 Alejandro Gonzalez. All rights reserved.
 //
 
-let json = """
+var json = """
     {
-    timezone: "America/New_York",
-    - currently: {
+    "timezone": "America/New_York",
+    "currently": {
 
-    time: 1529626827,
-    summary: "Clear"
-    temperature: "75.6"
-    humidity: "100.00"
-
-
-
-    },
+        "time": 1529626827,
+        "summary": "Clear",
+        "temperature": 75.6,
+        "humidity": 100.00,
+        },
+    }
     """
 
 
@@ -128,8 +126,8 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
         let decoder = JSONDecoder()
         
         do {
-            let weatherData = try decoder.decode(Weather.self, from: jsonData! )
-            weatherArray.append(weatherData)
+            let weatherData = try decoder.decode([Weather].self, from: jsonData! )
+           // weatherArray.append(weatherData)
             print(weatherData)
         } catch {
             print(error)
