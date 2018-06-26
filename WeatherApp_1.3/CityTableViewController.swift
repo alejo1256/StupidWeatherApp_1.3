@@ -26,20 +26,18 @@ import CoreLocation
 class CityTableViewController: UITableViewController, UISearchBarDelegate {
     @IBOutlet var searchbar: UISearchBar!
     
-    private let basePathURL = "https://api.darksky.net/forecast/a63372974e1eeedf5b65c38c5ec8b6eb/"
+    let basePathURL = "https://api.darksky.net/forecast/a63372974e1eeedf5b65c38c5ec8b6eb/"
 
     private var weather = [Weather]()
     
-    var currentWeatherData = [Weather]()
+   // var currentWeatherData = [Weather]()
   
    // var cities = [CityMO] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //self.getLatestWeather(withLocation: "42.3601,-71.0589") { (results:[Weather]) in
-            
-        //}
+        updateWeatherForLocation(location: "Las Vegas")
         
         searchbar.delegate = self
     }
@@ -84,14 +82,15 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
    
     // MARK: Helper functions
     
-    func getLatestWeather(withLocation name:CLLocationCoordinate2D , completion: @escaping ([Weather]) ->()) {
-        guard let weatherUrl = URL(string: basePathURL + "\(name.latitude), \(name.longitude)") else {
+    func getLatestWeather(withLocation name:CLLocationCoordinate2D) {
+        
+        guard let weatherURL = URL(string: basePathURL + "\(name.latitude),\(name.longitude)" ) else {
             return
         }
         
         //let url = basePathURL + "\(name.latitude), \(name.longitude)"
-       // weatherUrl = basePathURL + "\(name.latitude), \(name.longitude)"
-        let request = URLRequest(url: weatherUrl)
+        //let weatherUrl =  basePathURL + "\(name.latitude), \(name.longitude)"
+        let request = URLRequest(url: weatherURL)
         let task = URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) -> Void in
             
             if let error = error {
@@ -145,16 +144,7 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
         CLGeocoder().geocodeAddressString(location) { (placemarks:[CLPlacemark]?, error:Error?) in
             if error == nil {
                 if let location = placemarks?.first?.location{
-                    self.getLatestWeather(withLocation: location.coordinate, completion: { (results:[Weather]?) in
-                        if let weatherData = results {
-                            self.weather = weatherData
-                            
-                            DispatchQueue.main.async {
-                                self.tableView.reloadData()
-                            }
-
-                        }
-                    })
+                    self.getLatestWeather(withLocation: location.coordinate)
                 }
             }
         }
