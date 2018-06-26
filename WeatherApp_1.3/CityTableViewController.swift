@@ -28,6 +28,7 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
     
     let basePathURL = "https://api.darksky.net/forecast/a63372974e1eeedf5b65c38c5ec8b6eb/"
 
+    var cityNameString = "Las Vegas" //holds city name
     private var weather = [Weather]()
     
    // var currentWeatherData = [Weather]()
@@ -37,7 +38,7 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        updateWeatherForLocation(location: "Las Vegas")
+        updateWeatherForLocation(location: cityNameString)
         
         searchbar.delegate = self
     }
@@ -71,6 +72,7 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
         // Configure the cell...
         
         //cell.nameLabel.text = weather[indexPath.row].summary
+        cell.nameLabel.text = cityNameString
         cell.descriptionLabel.text = weather[indexPath.row].summary
         cell.temperatureLabel.text = "Current Temperature = \(weather[indexPath.row].temperature)"
         cell.minTempLabel.text = "Min Temperature = \(weather[indexPath.row].humidity)"
@@ -136,6 +138,7 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchbar.resignFirstResponder()
         if let locationString = searchbar.text, !locationString.isEmpty {
+            cityNameString = locationString
             updateWeatherForLocation(location: locationString)
         }
     }
@@ -144,6 +147,7 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
         CLGeocoder().geocodeAddressString(location) { (placemarks:[CLPlacemark]?, error:Error?) in
             if error == nil {
                 if let location = placemarks?.first?.location{
+                    //print(location)
                     self.getLatestWeather(withLocation: location.coordinate)
                 }
             }
