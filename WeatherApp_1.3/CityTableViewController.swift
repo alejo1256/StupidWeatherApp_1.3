@@ -125,7 +125,7 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
         do {
             let weatherData = try decoder.decode(Weather.self, from: data )
             weather.append(weatherData)
-            print(weatherData)
+            //print(weatherData)
         } catch {
             print(error)
         }
