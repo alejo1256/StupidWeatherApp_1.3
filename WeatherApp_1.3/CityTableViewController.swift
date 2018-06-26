@@ -85,13 +85,13 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
     // MARK: Helper functions
     
     func getLatestWeather(withLocation name:CLLocationCoordinate2D , completion: @escaping ([Weather]) ->()) {
-        guard URL(string: basePathURL) != nil else {
+        guard let weatherUrl = URL(string: basePathURL + "\(name.latitude), \(name.longitude)") else {
             return
         }
         
         //let url = basePathURL + "\(name.latitude), \(name.longitude)"
-        let url = basePathURL + "\(name.latitude), \(name.longitude)"
-        let request = URLRequest(url:URL(string:url)!)
+       // weatherUrl = basePathURL + "\(name.latitude), \(name.longitude)"
+        let request = URLRequest(url: weatherUrl)
         let task = URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) -> Void in
             
             if let error = error {
