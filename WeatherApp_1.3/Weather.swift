@@ -7,45 +7,52 @@
 //
 
 import Foundation
+import CoreData
 
-
-struct Weather: Codable {
+class Weather: NSManagedObject, Codable  {
     
-    let summary : String
-    let time : Int
-    let temperature: Double
-    let humidity: Double
-    let currently = ""
+    @NSManaged var time: Int32
+    @NSManaged var summary: String
+    @NSManaged var temperature: Double
+    @NSManaged var humidity: Double
     
-    enum CodingKeys:  String, CodingKey {
+    enum Codingkeys: String, CodingKey {
         case currently
     }
     
     enum CurrentlyKeys: String, CodingKey {
-        case summary
         case time
+        case summary
         case temperature
         case humidity
-        //case currently
     }
     
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
+    //MARK: - Decodable
+    required convenience init(from decoder: Decoder) throws {
+        guard let codingUserInfoKeyManagedObjectContext = CodingUserInfoKey.managedObjectContext,
+            let managedObjectContext = decoder.userInfo[codingUserInfoKeyManagedObjectContext] as? NSManagedObjectContext,
+            let entity = NSEntityDescription.entity(forEntityName: "Weather", in: managedObjectContext) else {
+                fatalError("Failed to decode User")
+        }
+        self.init(entity: entity, insertInto: managedObjectContext)
+        
+        let values = try decoder.container(keyedBy: Codingkeys.self)
         let currently = try values.nestedContainer(keyedBy: CurrentlyKeys.self, forKey: .currently)
         
         summary = try currently.decode(String.self, forKey: .summary)
-        time = try currently.decode(Int.self, forKey: .time)
+        time = try currently.decode(Int32.self, forKey: .time)
         temperature = try currently.decode(Double.self, forKey: .temperature)
         humidity = try currently.decode(Double.self, forKey: .humidity)
         
-        
-        
     }
     
+    // MARK:  Encodable
     
-    
-    
-    
+}
+
+public extension CodingUserInfoKey {
+    // Helper property to retrieve the context
+    static let managedObjectContext = CodingUserInfoKey(rawValue: "managedObjectContext")
 }
 
 
