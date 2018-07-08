@@ -10,42 +10,30 @@ import Foundation
 
 
 struct Weather: Codable {
+    var time: Int32
+    var summary: String
+    var temperature: Double
+    var humidity: Double
     
-    let summary : String
-    let time : Int
-    let temperature: Double
-    let humidity: Double
-    let currently = ""
-    
-    enum CodingKeys:  String, CodingKey {
+    enum Codingkeys: String, CodingKey {
         case currently
     }
     
     enum CurrentlyKeys: String, CodingKey {
-        case summary
         case time
+        case summary
         case temperature
         case humidity
-        //case currently
     }
     
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
+    init(from decodoer: Decoder) throws {
+        let values = try decodoer.container(keyedBy: Codingkeys.self)
         let currently = try values.nestedContainer(keyedBy: CurrentlyKeys.self, forKey: .currently)
-        
+        time = try currently.decode(Int32.self, forKey: .time)
         summary = try currently.decode(String.self, forKey: .summary)
-        time = try currently.decode(Int.self, forKey: .time)
         temperature = try currently.decode(Double.self, forKey: .temperature)
         humidity = try currently.decode(Double.self, forKey: .humidity)
-        
-        
-        
     }
-    
-    
-    
-    
-    
 }
 
 
