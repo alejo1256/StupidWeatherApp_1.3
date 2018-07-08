@@ -26,6 +26,8 @@ import CoreLocation
 class CityTableViewController: UITableViewController, UISearchBarDelegate {
     @IBOutlet var searchbar: UISearchBar!
     
+    var cityNames:[String] = ["Las Vegas"]
+    
     let basePathURL = "https://api.darksky.net/forecast/a63372974e1eeedf5b65c38c5ec8b6eb/"
 
     private var weather = [Weather]()
@@ -36,8 +38,11 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        for city in cityNames {
+            updateWeatherForLocation(location: city)
+        }
         
-        updateWeatherForLocation(location: "Las Vegas")
         
         searchbar.delegate = self
     }
@@ -71,6 +76,7 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
         // Configure the cell...
         
         //cell.nameLabel.text = weather[indexPath.row].summary
+        cell.nameLabel.text = cityNames[indexPath.row]
         cell.descriptionLabel.text = weather[indexPath.row].summary
         cell.temperatureLabel.text = "Current Temperature = \(weather[indexPath.row].temperature)"
         cell.minTempLabel.text = "Min Temperature = \(weather[indexPath.row].humidity)"
@@ -136,6 +142,7 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchbar.resignFirstResponder()
         if let locationString = searchbar.text, !locationString.isEmpty {
+            cityNames.append(locationString)
             updateWeatherForLocation(location: locationString)
         }
     }
