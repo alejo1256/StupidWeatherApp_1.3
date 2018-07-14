@@ -26,7 +26,7 @@ import CoreLocation
 class CityTableViewController: UITableViewController, UISearchBarDelegate {
     @IBOutlet var searchbar: UISearchBar!
     
-    var cityNames:[String] = ["Las Vegas"]
+    var cityNames = ["Las Vegas"]
     
     let basePathURL = "https://api.darksky.net/forecast/a63372974e1eeedf5b65c38c5ec8b6eb/"
 
@@ -77,10 +77,10 @@ class CityTableViewController: UITableViewController, UISearchBarDelegate {
         
         //cell.nameLabel.text = weather[indexPath.row].summary
         cell.nameLabel.text = cityNames[indexPath.row]
-        cell.descriptionLabel.text = weather[indexPath.row].summary
-        cell.temperatureLabel.text = "Current Temperature = \(weather[indexPath.row].temperature)"
-        cell.minTempLabel.text = "Min Temperature = \(weather[indexPath.row].humidity)"
-        cell.maxTempLabel.text = "Max Temperature = \(weather[indexPath.row].time)"
+        cell.descriptionLabel.text = weather[indexPath.row].currently.summary
+        cell.temperatureLabel.text = "Current Temperature = \(weather[indexPath.row].currently.temperature)"
+        cell.minTempLabel.text = "Min Temperature = \(weather[indexPath.row].daily.data[0].temperatureMin)"
+        cell.maxTempLabel.text = "Max Temperature = \(weather[indexPath.row].daily.data[0].temperatureMax)"
         
 
         return cell
